@@ -15,7 +15,7 @@ class HomeScreen extends StatelessWidget {
           'pageRoute': 'search',
         },
         {
-          'title': 'List',
+          'title': 'Popular',
           'label': 'List Articles',
           'pageRoute': 'list',
         },
