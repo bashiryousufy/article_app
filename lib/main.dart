@@ -1,4 +1,6 @@
-import 'package:article_app/views/Home.dart';
+import 'package:article_app/screens/articles_screen.dart';
+import 'package:article_app/screens/home_screen.dart';
+import 'package:article_app/screens/search_article_screen.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -11,11 +13,15 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: const Home(),
-    );
+        title: 'Article App',
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        routes: {
+          '/': (context) => const HomeScreen(),
+          '/search': (context) => const SearchArticleScreen(),
+          '/list': (context) => const ArticleScreen(),
+        });
   }
 }
