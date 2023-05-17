@@ -15,7 +15,7 @@ class ArticleScreen extends StatefulWidget {
 
 class _ArticleScreenState extends State<ArticleScreen> {
   Future<List<Article>> getArticles() async {
-    if (widget.query != null) {
+    if (widget.query != null && widget.query!.isNotEmpty) {
       return await ArticleService.queryArticles(widget.query!);
     } else {
       return await ArticleService.getMostViewedArticles();
