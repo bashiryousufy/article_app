@@ -33,7 +33,7 @@ class Article {
   final List<Multimedia> multimedia;
   final Headline? headline;
   final List<Keyword> keywords;
-  final String? pubDate;
+  final DateTime? pubDate;
   final String? documentType;
   final String? newsDesk;
   final String? sectionName;
@@ -53,7 +53,7 @@ class Article {
     List<Multimedia>? multimedia,
     Headline? headline,
     List<Keyword>? keywords,
-    String? pubDate,
+    DateTime? pubDate,
     String? documentType,
     String? newsDesk,
     String? sectionName,
@@ -103,7 +103,7 @@ class Article {
           ? []
           : List<Keyword>.from(
               json["keywords"]!.map((x) => Keyword.fromJson(x))),
-      pubDate: json["pub_date"],
+      pubDate: DateTime.parse(json["pub_date"]),
       documentType: json["document_type"],
       newsDesk: json["news_desk"],
       sectionName: json["section_name"],
