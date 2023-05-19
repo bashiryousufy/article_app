@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:article_app/models/Article.dart';
-import 'package:article_app/services/article_cache.dart';
+import 'package:article_app/services/cache_service.dart';
 import 'package:http/http.dart' as http;
 import 'package:article_app/constants/config.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -10,8 +10,8 @@ class ArticleService {
 
   Future<List<Article>> getMostViewedArticles() async {
     try {
-      ArticleCache articleCache =
-          ArticleCache(await SharedPreferences.getInstance());
+      CacheService articleCache =
+          CacheService(await SharedPreferences.getInstance());
 
       List<Article> articles = await articleCache.getCachedArticles();
 

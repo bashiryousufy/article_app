@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:article_app/models/Article.dart';
-import 'package:article_app/services/article_cache.dart';
+import 'package:article_app/services/cache_service.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -13,11 +13,11 @@ void main() {
   group('ArticleService', () {
     late MockSharedPreferences mockSharedPreferences;
     late ArticleService articleService;
-    late ArticleCache articleCache;
+    late CacheService articleCache;
 
     setUp(() {
       mockSharedPreferences = MockSharedPreferences();
-      articleCache = ArticleCache(mockSharedPreferences);
+      articleCache = CacheService(mockSharedPreferences);
       articleService = ArticleService();
     });
 
