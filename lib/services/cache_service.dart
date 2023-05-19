@@ -28,7 +28,7 @@ class CacheService {
 
   void setCachedArticles(String articles) async {
     try {
-      final parsed = jsonDecode(articles)['response']['docs'] as List<dynamic>;
+      final parsed = jsonDecode(articles)['results'] as List<dynamic>;
 
       sharedPreferences!.setString('articles', jsonEncode(parsed));
     } catch (e) {

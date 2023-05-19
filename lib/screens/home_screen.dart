@@ -19,7 +19,7 @@ class HomeScreen extends StatelessWidget {
         },
         {
           'title': 'Popular',
-          'label': 'List Articles',
+          'label': 'Most Viewed',
           'pageRoute': 'list',
         },
       ];

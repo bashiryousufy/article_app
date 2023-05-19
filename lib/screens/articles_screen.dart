@@ -22,8 +22,6 @@ class _ArticleScreenState extends State<ArticleScreen> {
 
     if (widget.query != null && widget.query!.isNotEmpty) {
       return await articleService.queryArticles(widget.query!);
-    } else if (widget.query == null || widget.query!.isEmpty) {
-      return [];
     } else {
       return await articleService.getMostViewedArticles();
     }
@@ -50,7 +48,7 @@ class _ArticleScreenState extends State<ArticleScreen> {
               itemBuilder: (context, index) {
                 Article article = snapshot.data?[index];
                 return ListTile(
-                  title: Text(article.headline?.main ?? ""),
+                  title: Text(article.headline?.main ?? article.title!),
                   subtitle: Text(
                     article.pubDate?.toLocal().toString().substring(0, 19) ??
                         "",

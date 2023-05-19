@@ -6,7 +6,9 @@ import 'package:article_app/constants/config.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ArticleService {
-  String API_URL = '${Config.API_URL}?api-key=${Config.API_KEY}';
+  String SEARCH_API_URL = '${Config.SEARCH_API_URL}?api-key=${Config.API_KEY}';
+  String MOSTVIEWED_API_URL =
+      '${Config.MOSTVIEWED_API_URL}?api-key=${Config.API_KEY}';
 
   Future<List<Article>> getMostViewedArticles() async {
     try {
@@ -17,19 +19,20 @@ class ArticleService {
 
       if (articles.isNotEmpty) return articles;
 
-      http.Response response = await http
-          .get(Uri.parse(API_URL), headers: {"Accept": "application/json"});
+      http.Response response = await http.get(Uri.parse(MOSTVIEWED_API_URL),
+          headers: {"Accept": "application/json"});
 
       if (response.statusCode == 200) {
-        final data = response.body;
+        final parsed = jsonDecode(response.body)['results'];
 
-        articleCache.setCachedArticles(data);
+        articleCache.setCachedArticles(response.body);
 
-        return parseArticles(data);
+        return parsed.map<Article>((json) => Article.fromJson(json)).toList();
       } else {
         throw Exception();
       }
     } catch (e) {
+      print(e);
       return [];
     }
   }
@@ -38,23 +41,20 @@ class ArticleService {
     try {
       if (query.isEmpty) return [];
 
-      http.Response response = await http.get(Uri.parse('$API_URL&q=$query'),
+      http.Response response = await http.get(
+          Uri.parse('$SEARCH_API_URL&q=$query'),
           headers: {"Accept": "application/json"});
 
       if (response.statusCode == 200) {
-        return parseArticles(response.body);
+        final parsed = jsonDecode(response.body)['response']['docs']
+            .cast<Map<String, dynamic>>();
+
+        return parsed.map<Article>((json) => Article.fromJson(json)).toList();
       } else {
         throw Exception();
       }
     } catch (e) {
       return [];
     }
-  }
-
-  static List<Article> parseArticles(String responseBody) {
-    final parsed = jsonDecode(responseBody)['response']['docs']
-        .cast<Map<String, dynamic>>();
-
-    return parsed.map<Article>((json) => Article.fromJson(json)).toList();
   }
 }
