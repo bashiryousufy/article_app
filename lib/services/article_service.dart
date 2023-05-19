@@ -1,78 +1,60 @@
 import 'dart:convert';
 import 'package:article_app/models/Article.dart';
+import 'package:article_app/services/article_cache.dart';
 import 'package:http/http.dart' as http;
 import 'package:article_app/constants/config.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ArticleService {
-  static String NYT_URL = '${Config.API_URL}?api-key=${Config.API_KEY}';
+  String API_URL = '${Config.API_URL}?api-key=${Config.API_KEY}';
 
-  static Future<List<Article>> getMostViewedArticles() async {
+  Future<List<Article>> getMostViewedArticles() async {
     try {
-      List<Article> articles = await getCachedArticles();
+      ArticleCache articleCache =
+          ArticleCache(await SharedPreferences.getInstance());
+
+      List<Article> articles = await articleCache.getCachedArticles();
 
       if (articles.isNotEmpty) return articles;
 
-      final SharedPreferences prefs = await SharedPreferences.getInstance();
-
       http.Response response = await http
-          .get(Uri.parse(NYT_URL), headers: {"Accept": "application/json"});
+          .get(Uri.parse(API_URL), headers: {"Accept": "application/json"});
 
       if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
+        final data = response.body;
 
-        final List<dynamic> articleList = data['response']['docs'];
+        articleCache.setCachedArticles(data);
 
-        articles =
-            articleList.map((article) => Article.fromJson(article)).toList();
-
-        prefs.setString('articles', jsonEncode(articleList));
+        return parseArticles(data);
+      } else {
+        throw Exception();
       }
-
-      return articles;
     } catch (e) {
       return [];
     }
   }
 
-  static Future<List<Article>> queryArticles(String query) async {
+  Future<List<Article>> queryArticles(String query) async {
     try {
-      List<Article> articles = [];
+      if (query.isEmpty) return [];
 
-      http.Response response = await http.get(Uri.parse('$NYT_URL&q=$query'),
+      http.Response response = await http.get(Uri.parse('$API_URL&q=$query'),
           headers: {"Accept": "application/json"});
 
       if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-
-        final List<dynamic> articleList = data['response']['docs'];
-
-        articles =
-            articleList.map((article) => Article.fromJson(article)).toList();
+        return parseArticles(response.body);
+      } else {
+        throw Exception();
       }
-
-      return articles;
     } catch (e) {
       return [];
     }
   }
 
-  static Future<List<Article>> getCachedArticles() async {
-    try {
-      final SharedPreferences prefs = await SharedPreferences.getInstance();
+  static List<Article> parseArticles(String responseBody) {
+    final parsed = jsonDecode(responseBody)['response']['docs']
+        .cast<Map<String, dynamic>>();
 
-      // Check if articles are cached
-      if (prefs.containsKey('articles')) {
-        final String articlesString = prefs.getString('articles') ?? '';
-
-        final List<dynamic> articles = jsonDecode(articlesString);
-
-        return articles.map((article) => Article.fromJson(article)).toList();
-      }
-
-      return [];
-    } catch (e) {
-      return [];
-    }
+    return parsed.map<Article>((json) => Article.fromJson(json)).toList();
   }
 }
