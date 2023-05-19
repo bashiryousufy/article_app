@@ -1,8 +1,11 @@
 import 'package:article_app/models/Article.dart';
+import 'package:article_app/providers/location_provider.dart';
 import 'package:article_app/services/article_service.dart';
+import 'package:article_app/widgets/app_bar_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:provider/provider.dart';
 
 class ArticleScreen extends StatefulWidget {
   final String? query;
@@ -29,9 +32,9 @@ class _ArticleScreenState extends State<ArticleScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Articles'),
-        centerTitle: true,
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(kToolbarHeight),
+        child: LocationAppBar(title: "Articles"),
       ),
       body: FutureBuilder(
         future: getArticles(),

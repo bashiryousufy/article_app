@@ -3,10 +3,10 @@ import 'dart:convert';
 import 'package:article_app/models/Article.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class ArticleCache {
+class CacheService {
   late SharedPreferences? sharedPreferences;
 
-  ArticleCache(this.sharedPreferences);
+  CacheService(this.sharedPreferences);
 
   Future<List<Article>> getCachedArticles() async {
     try {

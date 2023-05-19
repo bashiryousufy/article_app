@@ -1,4 +1,5 @@
 import 'package:article_app/screens/articles_screen.dart';
+import 'package:article_app/widgets/app_bar_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
@@ -11,9 +12,9 @@ class SearchArticleScreen extends StatelessWidget {
     final queryController = TextEditingController();
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Search'),
-        centerTitle: true,
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(kToolbarHeight),
+        child: LocationAppBar(title: "Search"),
       ),
       body: Container(
         margin: const EdgeInsets.only(top: 80),
